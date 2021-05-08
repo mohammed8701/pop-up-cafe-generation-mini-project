@@ -15,6 +15,16 @@ connection = pymysql.connect(
 )
 cursor = connection.cursor()
 
+
+##### CREATE DB / TABLES ######
+
+
+# create table Product (prod_name VARCHAR(255),prod_price FLOAT)
+
+create_products_table_cmd = "create table Products (prod_id INT NOT NULL AUTO_INCREMENT, prod_name VARCHAR(255), prod_price FLOAT, PRIMARY KEY (prod_id));"
+create_couriers_table_cmd = "create table Couriers (c_id INT NOT NULL AUTO_INCREMENT, c_name VARCHAR(255), c_number BIGINT, PRIMARY KEY (c_id));"
+create_orders_table_cmd = "create table Orders (order_id INT NOT NULL AUTO_INCREMENT, order_name VARCHAR(255), order_add VARCHAR(255), order_phone INT, order_courier VARCHAR(255), order_status VARCHAR(255), order_items VARCHAR(255), PRIMARY KEY (order_id));"
+
 ############# DISPLAY ITEMS ############
 
 def display_items(table):
@@ -29,8 +39,8 @@ def display_items(table):
         
         elif table == "Order":
             print(f'{str(row[0])}- Customer Name: {row[1]}, Address: {row[2]}, Phone Number: {row[3]}, Courier: {str(row[4])}, Status: {row[5]}, Items: {row[6]}')
-    cursor.close()
-    connection.close()
+    # cursor.close()
+    # connection.close()
     
     
     
@@ -55,8 +65,8 @@ def display_item_at_index(menu_name, index):
         rows = cursor.fetchall()
         for row in rows:
             print(f'{str(row[0])}: {row[1]} - {row[2]}')
-    cursor.close()
-    connection.close()
+    # cursor.close()
+    # connection.close()
 
 ########## ADD ITEM TO DB ############
 
@@ -70,10 +80,9 @@ def add_item_to_db(menu_name,name,attribute):
         val = (name, attribute)
         
     cursor.execute(sql, val)
-
     connection.commit()
-    cursor.close()
-    connection.close()
+    # cursor.close()
+    # connection.close()
     
 #################### UPDATE ITEMS ###########################
 def update_item(menu_name, index, name, attribute):
@@ -87,8 +96,8 @@ def update_item(menu_name, index, name, attribute):
     cursor.execute(sql)
         
     connection.commit()
-    cursor.close()
-    connection.close()
+    # cursor.close()
+    # connection.close()
 
 ############### DELETE ITEMS ###################
 def delete_item(menu_name,item_index):
@@ -119,10 +128,18 @@ def delete_item(menu_name,item_index):
     cursor.execute(sql)
 
     connection.commit()
-    cursor.close()
-    connection.close()
+    # cursor.close()
+    # connection.close()
     
-    
+############ ADD ORDERS #############################
+
+def add_order_to_db(name,address,phone,courier,status,items):
+        cursor = connection.cursor()
+        sql = "INSERT INTO Orders (order_name, order_add, order_phone, order_courier, order_status, order_items) VALUES ('{}', '{}', '{}', {}, '{}', '{}')".format(name,address,phone,courier,status,items)
+        cursor.execute(sql)
+        
+
+
     
     
 ################# UPDATE ORDERS #########################
@@ -133,8 +150,8 @@ def update_order_in_db(order_index, new_name, new_address, new_phone, new_courie
     cursor.execute(sql)
 
     connection.commit()
-    cursor.close()
-    connection.close()
+    # cursor.close()
+    # connection.close()
     
 
 ######################## GET ID's ###########################
@@ -165,8 +182,8 @@ def get_ids_from_db(table, list):
         for id in myresult:
             list.append(id[0])
         
-    cursor.close()
-    connection.close()
+    # cursor.close()
+    # connection.close()
     
 ############### GET PREVIOUS ATTRIBUTES #################
 
@@ -181,8 +198,8 @@ def get_previous_attr(table, index, list):
         for row in myresult:
             list.append(row)
         
-        cursor.close()
-        connection.close()
+        # cursor.close()
+        # connection.close()
         
     elif table == "Product":
         sql = "select prod_name, prod_price from Products where prod_id = {}".format(index)
@@ -192,8 +209,8 @@ def get_previous_attr(table, index, list):
         for row in myresult:
             list.append(row)
                 
-        cursor.close()
-        connection.close()    
+        # cursor.close()
+        # connection.close()    
         
     elif table == "Order":
         sql = "SELECT order_name,order_add,order_phone,order_courier,order_status,order_items FROM Orders where order_id = {}".format(index)
@@ -203,6 +220,6 @@ def get_previous_attr(table, index, list):
         for row in myresult:
             list.append(row)
         
-        cursor.close()
-        connection.close()
+        # cursor.close()
+        # connection.close()
 
