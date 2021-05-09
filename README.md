@@ -1,5 +1,5 @@
 # Mohammed's Pop Up Cafe for Generation Mini Project
-This is a a Python based CLI application for a pop-up cafe. The app allows the user to create/track orders for their customers. It performed CRUD operations for their data and  stores that data in a MySQL database.
+This is a Python based CLI application for a pop-up cafe. The app allows the user to create/track orders for their customers. It performed CRUD operations for their data and  stores that data in a MySQL database.
 
 
 ```
