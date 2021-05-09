@@ -139,6 +139,12 @@ def add_order_to_db(name,address,phone,courier,status,items):
         cursor.execute(sql)
         
 
+############# UPDATE ORDER STATUS #####################
+
+def update_order_status_seperate(new_status, order_index):
+    sql = "UPDATE Orders SET order_status = '{}' WHERE order_id = '{}'".format(new_status, order_index)
+    cursor.execute(sql)
+    print("Status Update Done\n")
 
     
     
@@ -213,7 +219,7 @@ def get_previous_attr(table, index, list):
         # connection.close()    
         
     elif table == "Order":
-        sql = "SELECT order_name,order_add,order_phone,order_courier,order_status,order_items FROM Orders where order_id = {}".format(index)
+        sql = "SELECT order_name,order_add,order_phone,order_courier,order_status,order_items FROM Orders where order_id = {}".format(str(index))
         cursor.execute(sql)
         myresult = cursor.fetchall()
         list.clear()

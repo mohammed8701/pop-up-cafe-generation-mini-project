@@ -80,6 +80,13 @@ def start_again():
             print(user_choice, error_message)
             print("\nPlease enter either '0' or '1'")
             
+def quit_app():
+    print("\n")
+    clear()
+    print("\nPlease come again!")
+    sys.exit()
+
+
 ########### ADD ITEMS ############
             
 def add_item_navigator(menu_name):
@@ -373,7 +380,7 @@ def orders_menu():
             print("Returning to main menu")
             False
             break
-            # return main.home_menu()
+            # main.home_menu()
         
         elif show_orders_list:
             clear()
@@ -381,22 +388,26 @@ def orders_menu():
             sql_cmds.display_items("Order")
             start_again()
             False
+            break
             
         elif add_new_orders:
             clear()
             add_new_orders_navigator()
             False
+            break
         
         elif update_orders_status:
             frequent.clear()
             select_order("update status", update_orders_status_prompt())
             False
+            break
         
         elif update_orders:
             frequent.clear()
             select_order("update order", update_orders_prompts())
             # update_orders_navigator()
             False
+            break
         
         elif delete_orders:
             frequent.clear()
@@ -417,6 +428,7 @@ def select_order(menu_name, order_prompt):
             clear()
             orders_menu()
             False
+            break
             
         
         elif menu_name == "update status":
@@ -551,33 +563,6 @@ def display_add_order_product_list(inputted_list):
     print(inputted_list)
 
 ################## UPDATE ORDER STATUS SEPERATE ################
-
-def update_order_status_seperate(new_status, order_index):
-    clear()
-
-    load_dotenv()
-    host = os.environ.get("mysql_host")
-    user = os.environ.get("mysql_user")
-    password = os.environ.get("mysql_pass")
-    database = os.environ.get("mysql_db")
-    
-    connection = pymysql.connect(
-        host,
-        user,
-        password,
-        database
-    )
-
-    cursor = connection.cursor()
-    sql = "UPDATE Orders SET order_status = '{}' WHERE order_id = '{}'".format(new_status, order_index)
-    
-    cursor.execute(sql)
-
-    connection.commit()
-    cursor.close()
-    connection.close()
-
-    print("Status Update Done\n")
     
 def update_orders_status_prompt():
     update_orders_selection_prompt = [
@@ -603,12 +588,13 @@ def update_orders_status_menu(menu_name, order_index):
     frequent.display_available_items(frequent.order_status_options)
     status_choice = input()
     
+    
     chosen_status = frequent.order_status_options[int(status_choice)-1]
     try:
         frequent.clear()
-        update_order_status_seperate(chosen_status, order_index)
+        sql_cmds.update_order_status_seperate(chosen_status, str(order_index))
         print("Order Status Updated!\n\n")
-        display_item_at_index(menu_name, order_index)
+        sql_cmds.display_item_at_index(menu_name, order_index)
         start_again()
         return 1
     except Exception as e:
@@ -663,11 +649,13 @@ def update_order_name():
             selected_name = caches.selected_order_info_dict[0]['order_name']
             return selected_name
             False
+            break
             
         elif updated_name_for_order != "":
             selected_name = updated_name_for_order.title()
             return selected_name
             False
+            break
             
         else:
             print("\nError!:\nPlease input one of the specified conditions outlined above\n")   
@@ -681,13 +669,13 @@ def update_orders_address():
             selected_address = caches.selected_order_info_dict[0]['order_add']
             return selected_address
             False
-            
+            break
         
         elif updated_address_for_order != "":
             selected_address = updated_address_for_order
             return selected_address
             False
-            
+            break
         else:
             print("\nError!:\nPlease input one of the specified conditions outlined above\n")  
     
@@ -699,12 +687,12 @@ def update_orders_number():
             selected_number = caches.selected_order_info_dict[0]['order_phone']
             return selected_number
             False
-            
+            break
         elif updated_number_for_order != "":
             selected_number = updated_number_for_order
             return selected_number
             False
-            
+            break
         else:
             print("\nError!:\nPlease input one of the specified conditions outlined above\n") 
 
@@ -721,13 +709,13 @@ def update_orders_courier():
             selected_courier = caches.selected_order_info_dict[0]['order_courier']
             return selected_courier
             True
-            
+            break
 
         if order_couriers_index != "" and int(order_couriers_index) in caches.courier_ids_list:
             selected_courier = int(order_couriers_index)
             return selected_courier
             True
-            
+            break
         
         else:
             clear()
@@ -754,13 +742,13 @@ def update_orders_status():
                 selected_status = caches.selected_order_info_dict[0]['order_status']
                 return selected_status
                 False
-                
+                break
             
             elif updated_status_for_order != "":
                 selected_status = frequent.order_status_options[int(updated_status_for_order)-1]
                 return selected_status
                 False
-                
+                break
             
             else:
                 print("\nError!:\nPlease input one of the specified conditions outlined above\n")   
@@ -812,7 +800,7 @@ def updated_items_to_order():
                 #FIGURE OUT HOW TO MAKE THIS A STRING
                 return selected_items
                 True
-                
+                break
             elif end_of_item_selection == "1":
                 clear()
                 continue
