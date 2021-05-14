@@ -27,19 +27,21 @@ class create_tables(Connection):
     def __init__(self):
         super().__init__()
     
-    def create_create_products_table(self):
-        sql = "create table Products (prod_id INT NOT NULL AUTO_INCREMENT, prod_name VARCHAR(255), prod_price FLOAT, PRIMARY KEY (prod_id));"
-        self.cursor.connection(sql)
-        self.connection.commit()
-    
-    def create_couriers_table(self):
-        sql = "create table Couriers (c_id INT NOT NULL AUTO_INCREMENT, c_name VARCHAR(255), c_number BIGINT, PRIMARY KEY (c_id));"
-        self.cursor.connection(sql)
-        self.connection.commit()
-    
-    def create_orders_table(self):
-        sql = "create table Orders (order_id INT NOT NULL AUTO_INCREMENT, order_name VARCHAR(255), order_add VARCHAR(255), order_phone INT, order_courier VARCHAR(255), order_status VARCHAR(255), order_items VARCHAR(255), PRIMARY KEY (order_id));"
-
+    def create_table(self, menu_name):
+        if menu_name == "Product":
+            sql = "create table Products (prod_id INT NOT NULL AUTO_INCREMENT, prod_name VARCHAR(255), prod_price FLOAT, PRIMARY KEY (prod_id));"
+            self.cursor.connection(sql)
+            self.connection.commit()
+            
+        if menu_name == "Courier":
+            sql = "create table Couriers (c_id INT NOT NULL AUTO_INCREMENT, c_name VARCHAR(255), c_number BIGINT, PRIMARY KEY (c_id));"
+            self.cursor.connection(sql)
+            self.connection.commit()
+            
+        if menu_name == "Order":
+            sql = "create table Orders (order_id INT NOT NULL AUTO_INCREMENT, order_name VARCHAR(255), order_add VARCHAR(255), order_phone INT, order_courier VARCHAR(255), order_status VARCHAR(255), order_items VARCHAR(255), PRIMARY KEY (order_id));"
+            self.cursor.connection(sql)
+            self.connection.commit()
 
 ############# DISPLAY ITEMS ############
 
