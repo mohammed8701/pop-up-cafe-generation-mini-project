@@ -16,18 +16,20 @@ class Connection():
         password,
         database
 )
-        self.cursor = self.connection.cursor()
+        # self.cursor = self.connection.cursor()
 
     def greeting(self):
         print("Successfully opened Database", self.cursor)
         
         
 ##### CREATE DB / TABLES ######
-class create_tables(Connection):
+class Create_Tables(Connection):
     def __init__(self):
         super().__init__()
     
     def create_table(self, menu_name):
+        self.cursor = self.connection.cursor()
+        
         if menu_name == "Product":
             sql = "create table Products (prod_id INT NOT NULL AUTO_INCREMENT, prod_name VARCHAR(255), prod_price FLOAT, PRIMARY KEY (prod_id));"
             self.cursor.connection(sql)
@@ -42,6 +44,75 @@ class create_tables(Connection):
             sql = "create table Orders (order_id INT NOT NULL AUTO_INCREMENT, order_name VARCHAR(255), order_add VARCHAR(255), order_phone INT, order_courier VARCHAR(255), order_status VARCHAR(255), order_items VARCHAR(255), PRIMARY KEY (order_id));"
             self.cursor.connection(sql)
             self.connection.commit()
+
+########### LOAD FUNCTIONS ###############
+
+class Load_From_Table(Connection):
+    def __init__(self):
+        super().__init__()
+    
+    def get_previous_attr(self, table, index, list):
+        self.cursor = self.connection.cursor(pymysql.cursors.DictCursor)
+        
+        if table == "Courier":
+            sql = "select c_name, c_number from Couriers where c_id = {}".format(index)
+            self.cursor.execute(sql)
+            myresult = self.cursor.fetchall()
+            list.clear()
+            for row in myresult:
+                list.append(row)
+            
+            # cursor.close()
+            # connection.close()
+            
+        elif table == "Product":
+            sql = "select prod_name, prod_price from Products where prod_id = {}".format(index)
+            self.cursor.execute(sql)
+            myresult = self.cursor.fetchall()
+            list.clear()
+            for row in myresult:
+                list.append(row)
+                    
+            # cursor.close()
+            # connection.close()    
+            
+        elif table == "Order":
+            sql = "SELECT order_name,order_add,order_phone,order_courier,order_status,order_items FROM Orders where order_id = {}".format(str(index))
+            self.cursor.execute(sql)
+            myresult = self.cursor.fetchall()
+            list.clear()
+            for row in myresult:
+                list.append(row)
+            
+            # cursor.close()
+            # connection.close()
+            
+    def get_ids_from_db(self, table, list):
+        
+        if table == "Courier":
+            sql = "SELECT c_id FROM Couriers"
+            self.cursor.execute(sql)
+            myresult = self.cursor.fetchall()
+            list.clear()
+            for id in myresult:
+                list.append(id[0])
+                
+        elif table == "Product":
+            sql = "SELECT prod_id FROM Products"
+            self.cursor.execute(sql)
+            myresult = self.cursor.fetchall()
+            list.clear()
+            for id in myresult:
+                list.append(id[0])
+                
+        elif table == "Order":
+            sql = "SELECT order_id FROM Orders"
+            self.cursor.execute(sql)
+            myresult = self.cursor.fetchall()
+            list.clear()
+            for id in myresult:
+                list.append(id[0])
+        
 
 ############# DISPLAY ITEMS ############
 
@@ -180,70 +251,70 @@ def update_order_in_db(order_index, new_name, new_address, new_phone, new_courie
 
 ######################## GET ID's ###########################
 
-def get_ids_from_db(table, list):
+# def get_ids_from_db(table, list):
     
-    if table == "Courier":
-        sql = "SELECT c_id FROM Couriers"
-        cursor.execute(sql)
-        myresult = cursor.fetchall()
-        list.clear()
-        for id in myresult:
-            list.append(id[0])
+#     if table == "Courier":
+#         sql = "SELECT c_id FROM Couriers"
+#         cursor.execute(sql)
+#         myresult = cursor.fetchall()
+#         list.clear()
+#         for id in myresult:
+#             list.append(id[0])
             
-    elif table == "Product":
-        sql = "SELECT prod_id FROM Products"
-        cursor.execute(sql)
-        myresult = cursor.fetchall()
-        list.clear()
-        for id in myresult:
-            list.append(id[0])
+#     elif table == "Product":
+#         sql = "SELECT prod_id FROM Products"
+#         cursor.execute(sql)
+#         myresult = cursor.fetchall()
+#         list.clear()
+#         for id in myresult:
+#             list.append(id[0])
             
-    elif table == "Order":
-        sql = "SELECT order_id FROM Orders"
-        cursor.execute(sql)
-        myresult = cursor.fetchall()
-        list.clear()
-        for id in myresult:
-            list.append(id[0])
+#     elif table == "Order":
+#         sql = "SELECT order_id FROM Orders"
+#         cursor.execute(sql)
+#         myresult = cursor.fetchall()
+#         list.clear()
+#         for id in myresult:
+#             list.append(id[0])
         
     # cursor.close()
     # connection.close()
     
 ############### GET PREVIOUS ATTRIBUTES #################
 
-def get_previous_attr(table, index, list):
-    cursor = connection.cursor(pymysql.cursors.DictCursor)
+# def get_previous_attr(table, index, list):
+#     cursor = connection.cursor(pymysql.cursors.DictCursor)
     
-    if table == "Courier":
-        sql = "select c_name, c_number from Couriers where c_id = {}".format(index)
-        cursor.execute(sql)
-        myresult = cursor.fetchall()
-        list.clear()
-        for row in myresult:
-            list.append(row)
+#     if table == "Courier":
+#         sql = "select c_name, c_number from Couriers where c_id = {}".format(index)
+#         cursor.execute(sql)
+#         myresult = cursor.fetchall()
+#         list.clear()
+#         for row in myresult:
+#             list.append(row)
         
-        # cursor.close()
-        # connection.close()
+#         # cursor.close()
+#         # connection.close()
         
-    elif table == "Product":
-        sql = "select prod_name, prod_price from Products where prod_id = {}".format(index)
-        cursor.execute(sql)
-        myresult = cursor.fetchall()
-        list.clear()
-        for row in myresult:
-            list.append(row)
+#     elif table == "Product":
+#         sql = "select prod_name, prod_price from Products where prod_id = {}".format(index)
+#         cursor.execute(sql)
+#         myresult = cursor.fetchall()
+#         list.clear()
+#         for row in myresult:
+#             list.append(row)
                 
-        # cursor.close()
-        # connection.close()    
+#         # cursor.close()
+#         # connection.close()    
         
-    elif table == "Order":
-        sql = "SELECT order_name,order_add,order_phone,order_courier,order_status,order_items FROM Orders where order_id = {}".format(str(index))
-        cursor.execute(sql)
-        myresult = cursor.fetchall()
-        list.clear()
-        for row in myresult:
-            list.append(row)
+#     elif table == "Order":
+#         sql = "SELECT order_name,order_add,order_phone,order_courier,order_status,order_items FROM Orders where order_id = {}".format(str(index))
+#         cursor.execute(sql)
+#         myresult = cursor.fetchall()
+#         list.clear()
+#         for row in myresult:
+#             list.append(row)
         
-        # cursor.close()
-        # connection.close()
+#         # cursor.close()
+#         # connection.close()
 
