@@ -7,23 +7,39 @@ user = os.environ.get("mysql_user")
 password = os.environ.get("mysql_pass")
 database = os.environ.get("mysql_db")
 
-connection = pymysql.connect(
+
+class Connection():
+    def __init__(self):
+        self.connection = pymysql.connect(
         host,
         user,
         password,
         database
 )
-cursor = connection.cursor()
+        self.cursor = self.connection.cursor()
 
-
+    def greeting(self):
+        print("Successfully opened Database", self.cursor)
+        
+        
 ##### CREATE DB / TABLES ######
+class create_tables(Connection):
+    def __init__(self):
+        super().__init__()
+    
+    def create_create_products_table(self):
+        sql = "create table Products (prod_id INT NOT NULL AUTO_INCREMENT, prod_name VARCHAR(255), prod_price FLOAT, PRIMARY KEY (prod_id));"
+        self.cursor.connection(sql)
+        self.connection.commit()
+    
+    def create_couriers_table(self):
+        sql = "create table Couriers (c_id INT NOT NULL AUTO_INCREMENT, c_name VARCHAR(255), c_number BIGINT, PRIMARY KEY (c_id));"
+        self.cursor.connection(sql)
+        self.connection.commit()
+    
+    def create_orders_table(self):
+        sql = "create table Orders (order_id INT NOT NULL AUTO_INCREMENT, order_name VARCHAR(255), order_add VARCHAR(255), order_phone INT, order_courier VARCHAR(255), order_status VARCHAR(255), order_items VARCHAR(255), PRIMARY KEY (order_id));"
 
-
-# create table Product (prod_name VARCHAR(255),prod_price FLOAT)
-
-create_products_table_cmd = "create table Products (prod_id INT NOT NULL AUTO_INCREMENT, prod_name VARCHAR(255), prod_price FLOAT, PRIMARY KEY (prod_id));"
-create_couriers_table_cmd = "create table Couriers (c_id INT NOT NULL AUTO_INCREMENT, c_name VARCHAR(255), c_number BIGINT, PRIMARY KEY (c_id));"
-create_orders_table_cmd = "create table Orders (order_id INT NOT NULL AUTO_INCREMENT, order_name VARCHAR(255), order_add VARCHAR(255), order_phone INT, order_courier VARCHAR(255), order_status VARCHAR(255), order_items VARCHAR(255), PRIMARY KEY (order_id));"
 
 ############# DISPLAY ITEMS ############
 
