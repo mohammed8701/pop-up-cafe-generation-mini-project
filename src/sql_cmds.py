@@ -88,7 +88,8 @@ class Load_From_Table(Connection):
             # connection.close()
             
     def get_ids_from_db(self, table, list):
-        
+        self.cursor = self.connection.cursor()
+
         if table == "Courier":
             sql = "SELECT c_id FROM Couriers"
             self.cursor.execute(sql)
@@ -115,138 +116,130 @@ class Load_From_Table(Connection):
         
 
 ############# DISPLAY ITEMS ############
-
-def display_items(table):
-    cursor.execute('SELECT * FROM {}s'.format(str(table)))
-    rows = cursor.fetchall()
-    for row in rows:
-        if table == "Product":
-            print(f'{str(row[0])}: {row[1]} - £{row[2]}')
-    
-        elif table == "Courier":
-            print(f'{str(row[0])}: {row[1]} - {row[2]}')
+class Display_Items(Connection):
+    def __init__(self):
+        super().__init__()
         
-        elif table == "Order":
-            print(f'{str(row[0])}- Customer Name: {row[1]}, Address: {row[2]}, Phone Number: {row[3]}, Courier: {str(row[4])}, Status: {row[5]}, Items: {row[6]}')
-    # cursor.close()
-    # connection.close()
-    
-    
-    
-######### DISPLAY ITEMS AT INDEX #############
+    def display_items(self,table):
+        self.cursor = self.connection.cursor()
+        self.cursor.execute('SELECT * FROM {}s'.format(str(table)))
+        rows = self.cursor.fetchall()
+        for row in rows:
+            if table == "Product":
+                print(f'{str(row[0])}: {row[1]} - £{row[2]}')
+        
+            elif table == "Courier":
+                print(f'{str(row[0])}: {row[1]} - {row[2]}')
+            
+            elif table == "Order":
+                print(f'{str(row[0])}- Customer Name: {row[1]}, Address: {row[2]}, Phone Number: {row[3]}, Courier: {str(row[4])}, Status: {row[5]}, Items: {row[6]}')
+        # cursor.close()
+        # connection.close()
 
-def display_item_at_index(menu_name, index):
-    
-    if menu_name == "Order":
-        cursor.execute('SELECT * FROM {}s WHERE order_id = {}'.format(str(menu_name, index)))    
-        rows = cursor.fetchall()
-        for row in rows:
-            print(f'{str(row[0])}- Customer Name: {row[1]}, Address: {row[2]}, Phone Number: {row[3]}, Courier: {str(row[4])}, Status: {row[5]}, Items: {row[6]}')
+    def display_item_at_index(self, menu_name, index):
+        self.cursor = self.connection.cursor()
+        if menu_name == "Order":
+            self.cursor.execute('SELECT * FROM {}s WHERE order_id = {}'.format(str(menu_name, index)))    
+            rows = self.cursor.fetchall()
+            for row in rows:
+                print(f'{str(row[0])}- Customer Name: {row[1]}, Address: {row[2]}, Phone Number: {row[3]}, Courier: {str(row[4])}, Status: {row[5]}, Items: {row[6]}')
 
-    elif menu_name == "Product":
-        cursor.execute('SELECT * FROM {}s WHERE prod_id = {}'.format(str(menu_name,index)))
-        rows = cursor.fetchall()
-        for row in rows:
-            print(f'{str(row[0])}: {row[1]} - £{row[2]}')
-    
-    elif menu_name == "Courier":
-        cursor.execute('SELECT * FROM {}s WHERE c_id = {}'.format(str(menu_name, index)))
-        rows = cursor.fetchall()
-        for row in rows:
-            print(f'{str(row[0])}: {row[1]} - {row[2]}')
+        elif menu_name == "Product":
+            self.cursor.execute('SELECT * FROM {}s WHERE prod_id = {}'.format(str(menu_name,index)))
+            rows = self.cursor.fetchall()
+            for row in rows:
+                print(f'{str(row[0])}: {row[1]} - £{row[2]}')
+        
+        elif menu_name == "Courier":
+            self.cursor.execute('SELECT * FROM {}s WHERE c_id = {}'.format(str(menu_name, index)))
+            rows = self.cursor.fetchall()
+            for row in rows:
+                print(f'{str(row[0])}: {row[1]} - {row[2]}')
     # cursor.close()
     # connection.close()
 
 ########## ADD ITEM TO DB ############
 
-def add_item_to_db(menu_name,name,attribute):
-    if menu_name == "Product":
-        sql = "INSERT INTO Products (prod_name, prod_price) VALUES (%s, %s)"
-        val = (name, attribute)
-        
-    elif menu_name == "Courier":
-        sql = "INSERT INTO Couriers (c_name, c_number) VALUES (%s, %s)"
-        val = (name, attribute)
-        
-    cursor.execute(sql, val)
-    connection.commit()
+class alter_item(Connection):
+    def __init__(self):
+        super().__init__()
+
+    def add_item_to_db(self,menu_name,name,attribute):
+        self.cursor = self.connection.cursor()
+        if menu_name == "Product":
+            sql = "INSERT INTO Products (prod_name, prod_price) VALUES (%s, %s)"
+            val = (name, attribute)
+            
+        elif menu_name == "Courier":
+            sql = "INSERT INTO Couriers (c_name, c_number) VALUES (%s, %s)"
+            val = (name, attribute)
+            
+        self.cursor.execute(sql, val)
+        self.connection.commit()
     # cursor.close()
     # connection.close()
-    
-#################### UPDATE ITEMS ###########################
-def update_item(menu_name, index, name, attribute):
-    frequent.clear()
-    if menu_name == "Product":
-        sql = "UPDATE Products SET prod_name = '{}', prod_price = '{}' WHERE prod_id = {}".format(name, attribute, index)
-    
-    elif menu_name == "Courier":
-        sql = "UPDATE Couriers SET c_name = '{}', c_number = '{}' WHERE c_id = {}".format(name, attribute, index)
-    
-    cursor.execute(sql)
         
-    connection.commit()
+    #################### UPDATE ITEMS ###########################
+    def update_item(self, menu_name, index, name, attribute):
+        self.cursor = self.connection.cursor()
+        frequent.clear()
+        if menu_name == "Product":
+            sql = "UPDATE Products SET prod_name = '{}', prod_price = '{}' WHERE prod_id = {}".format(name, attribute, index)
+        
+        elif menu_name == "Courier":
+            sql = "UPDATE Couriers SET c_name = '{}', c_number = '{}' WHERE c_id = {}".format(name, attribute, index)
+        
+        self.cursor.execute(sql)
+        self.connection.commit()
     # cursor.close()
     # connection.close()
 
 ############### DELETE ITEMS ###################
-def delete_item(menu_name,item_index):
-    load_dotenv()
-    host = os.environ.get("mysql_host")
-    user = os.environ.get("mysql_user")
-    password = os.environ.get("mysql_pass")
-    database = os.environ.get("mysql_db")
+    def delete_item(self,menu_name,item_index):
+        self.cursor = self.connection.cursor()
+        if menu_name == "Product":
+            sql = f"DELETE FROM Products WHERE prod_id = {item_index}"
+        elif menu_name == "Courier":
+            sql = f"DELETE FROM Couriers WHERE c_id = {item_index}"
+        elif menu_name == "Order":
+            sql = f"DELETE FROM Orders WHERE order_id = {item_index}"
+            
 
-    connection = pymysql.connect(
-        host,
-        user,
-        password,
-        database
-    )
-
-    cursor = connection.cursor()
-    if menu_name == "Product":
-        sql = f"DELETE FROM Products WHERE prod_id = {item_index}"
-
-    elif menu_name == "Courier":
-        sql = f"DELETE FROM Couriers WHERE c_id = {item_index}"
-        
-    elif menu_name == "Order":
-        sql = f"DELETE FROM Orders WHERE order_id = {item_index}"
-        
-
-    cursor.execute(sql)
-
-    connection.commit()
+        self.cursor.execute(sql)
+        self.connection.commit()
     # cursor.close()
     # connection.close()
     
 ############ ADD ORDERS #############################
-
-def add_order_to_db(name,address,phone,courier,status,items):
-        cursor = connection.cursor()
+class Alter_Orders(Connection):
+    def __init__(self):
+        super().__init__()
+        
+    def add_order_to_db(self,name,address,phone,courier,status,items):
+        self.cursor = self.connection.cursor()
         sql = "INSERT INTO Orders (order_name, order_add, order_phone, order_courier, order_status, order_items) VALUES ('{}', '{}', '{}', {}, '{}', '{}')".format(name,address,phone,courier,status,items)
-        cursor.execute(sql)
+        self.cursor.execute(sql)
         
 
-############# UPDATE ORDER STATUS #####################
+    ############# UPDATE ORDER STATUS #####################
 
-def update_order_status_seperate(new_status, order_index):
-    sql = "UPDATE Orders SET order_status = '{}' WHERE order_id = '{}'".format(new_status, order_index)
-    cursor.execute(sql)
-    print("Status Update Done\n")
+    def update_order_status_seperate(self,new_status, order_index):
+        sql = "UPDATE Orders SET order_status = '{}' WHERE order_id = '{}'".format(new_status, order_index)
+        self.cursor.execute(sql)
+        print("Status Update Done\n")
 
-    
-    
-################# UPDATE ORDERS #########################
+        
+        
+    ################# UPDATE ORDERS #########################
 
-def update_order_in_db(order_index, new_name, new_address, new_phone, new_courier, new_status, new_products):
-    
-    sql = "UPDATE Orders SET order_name = '{}', order_add = '{}', order_phone = '{}', order_courier = {}, order_status = '{}', order_items = '{}' where order_id = {}".format(new_name,new_address,new_phone,new_courier,new_status,new_products,order_index)
-    cursor.execute(sql)
+    def update_order_in_db(self,order_index, new_name, new_address, new_phone, new_courier, new_status, new_products):
+        
+        sql = "UPDATE Orders SET order_name = '{}', order_add = '{}', order_phone = '{}', order_courier = {}, order_status = '{}', order_items = '{}' where order_id = {}".format(new_name,new_address,new_phone,new_courier,new_status,new_products,order_index)
+        self.cursor.execute(sql)
 
-    connection.commit()
-    # cursor.close()
-    # connection.close()
+        self.connection.commit()
+        # cursor.close()
+        # connection.close()
     
 
 ######################## GET ID's ###########################
